@@ -48,6 +48,14 @@
 //#include <stdint.h>
 #include <utility>
 
+#if defined(__SSE4_2__) && defined(__x86_64__)
+#define CITY_HASH_SSE_INCLUDE <nmmintrin.h>
+
+#elif defined(__ARM_NEON) && defined(__aarch64__)
+#define CITY_HASH_SSE_INCLUDE "sse2neon.h"
+
+#endif
+
 typedef uint8_t uint8;
 typedef uint32_t uint32;
 typedef uint64_t uint64;
@@ -91,7 +99,7 @@ inline uint64 Hash128to64(const uint128& x) {
 
 // Conditionally include declarations for versions of City that require SSE4.2
 // instructions to be available.
-#if defined(__SSE4_2__) && defined(__x86_64__)
+#ifdef CITY_HASH_SSE_INCLUDE
 
 // Hash function for a byte array.
 uint128 CityHashCrc128(const char *s, size_t len);
@@ -103,6 +111,6 @@ uint128 CityHashCrc128WithSeed(const char *s, size_t len, uint128 seed);
 // Hash function for a byte array.  Sets result[0] ... result[3].
 void CityHashCrc256(const char *s, size_t len, uint64 *result);
 
-#endif  // __SSE4_2__
+#endif  // CITY_HASH_SSE_INCLUDE
 
 #endif  // CITY_HASH_H_

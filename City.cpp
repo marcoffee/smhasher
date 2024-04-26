@@ -485,8 +485,8 @@ uint128 CityHash128(const char *s, size_t len) {
   }
 }
 
-#if defined(__SSE4_2__) && defined(__x86_64__)
-#include <nmmintrin.h>
+#ifdef CITY_HASH_SSE_INCLUDE
+#include CITY_HASH_SSE_INCLUDE
 
 // Requires len >= 240.
 static void CityHashCrc256Long(const char *s, size_t len,
@@ -596,4 +596,4 @@ uint128 CityHashCrc128(const char *s, size_t len) {
   }
 }
 
-#endif
+#endif // CITY_HASH_SSE_INCLUDE
